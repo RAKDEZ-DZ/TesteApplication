@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">teste</string>
+    <string name="app_name">Post Viewer</string>
+    <string name="login">Connexion</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="password">Mot de passe</string>
+    <string name="login_button">Se connecter</string>
+    <string name="logout">Déconnexion</string>
+    <string name="posts_title">Posts</string>
+    <string name="loading">Chargement...</string>
+    <string name="error_network">Erreur réseau</string>
+    <string name="error_empty_fields">Veuillez remplir tous les champs</string>
 </resources>
