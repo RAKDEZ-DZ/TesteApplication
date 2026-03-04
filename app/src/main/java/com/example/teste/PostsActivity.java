@@ -162,6 +162,7 @@
 
 package com.example.teste;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -294,6 +295,9 @@ public class PostsActivity extends BaseActivity implements PostsAdapter.OnItemCl
 
     private void logout() {
         sessionManager.logout();
+        Intent intent = new Intent(PostsActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
     }
 

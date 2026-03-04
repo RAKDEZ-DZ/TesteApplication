@@ -6,36 +6,30 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.teste.R;
 import com.example.teste.databinding.ActivityLoginBinding;
 import com.example.teste.utile.SessionManager;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // ViewBinding
-    private ActivityLoginBinding binding;
+    private static final int MIN_LOGIN_LENGTH = 3;
+    private static final int MAX_LOGIN_LENGTH = 20;
 
-    // Gestionnaire de session
+    private ActivityLoginBinding binding;
     private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialiser le ViewBinding
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Initialiser le SessionManager
         sessionManager = new SessionManager(this);
 
-        // VÉRIFICATION IMPORTANTE : Si déjà connecté, aller directement aux posts
         if (sessionManager.isLoggedIn()) {
             openPostsActivity();
-            return; // Important : arrêter l'exécution ici
+            return;
         }
 
-        // Configurer les listeners
         setupListeners();
     }
 
@@ -49,33 +43,56 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        // Récupérer les valeurs des champs
         String login = binding.etLogin.getText().toString().trim();
         String password = binding.etPassword.getText().toString().trim();
 
-        // Vérifier si les champs sont vides
-        if (TextUtils.isEmpty(login) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this, R.string.error_empty_fields, Toast.LENGTH_SHORT).show();
+        // Réinitialiser les erreurs
+        binding.textInputLayoutLogin.setError(null);
+        binding.textInputLayoutPassword.setError(null);
+
+        // Vérifier les champs vides
+        if (TextUtils.isEmpty(login)) {
+            binding.textInputLayoutLogin.setError("Login requis");
             return;
         }
 
-        // "FAKE AUTH" - Si les champs ne sont pas vides, on connecte l'utilisateur
+        if (TextUtils.isEmpty(password)) {
+            binding.textInputLayoutPassword.setError("Mot de passe requis");
+            return;
+        }
+
+        // Valider login
+        if (login.length() < MIN_LOGIN_LENGTH) {
+            binding.textInputLayoutLogin.setError("Le login doit contenir au moins " + MIN_LOGIN_LENGTH + " caractères");
+            return;
+        }
+
+        if (login.length() > MAX_LOGIN_LENGTH) {
+            binding.textInputLayoutLogin.setError("Le login ne peut pas dépasser " + MAX_LOGIN_LENGTH + " caractères");
+            return;
+        }
+
+        if (!login.matches("^[a-zA-Z0-9._-]+$")) {
+            binding.textInputLayoutLogin.setError("Caractères autorisés : lettres, chiffres, . _ -");
+            return;
+        }
+
+        // Valider password
+        if (password.length() < 3) {
+            binding.textInputLayoutPassword.setError("Le mot de passe doit contenir au moins 3 caractères");
+            return;
+        }
+
+        // Tout est valide
         sessionManager.setLogin(login, true);
-
-        // Message de confirmation
         Toast.makeText(this, "Connexion réussie !", Toast.LENGTH_SHORT).show();
-
-        // Ouvrir l'écran des posts
         openPostsActivity();
     }
 
     private void openPostsActivity() {
-         Intent intent = new Intent(LoginActivity.this, PostsActivity.class);
-         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-         startActivity(intent);
-         finish();
-
-        // Pour l'instant, juste un message
-        Toast.makeText(this, "Ici on ouvrira PostsActivity", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(LoginActivity.this, PostsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
