@@ -244,11 +244,14 @@ public class PostsActivity extends BaseActivity implements PostsAdapter.OnItemCl
                 hideLoading();
             }
         });
-
-        // Observer les erreurs
         viewModel.getErrorMessage().observe(this, error -> {
             if (error != null) {
-                showError(error);
+                if (error.contains("Failed to connect") || error.contains("timeout") ||
+                        error.contains("network") || error.contains("internet")) {
+                    showError("Pas de connexion internet. Vérifiez votre réseau.");
+                } else {
+                    showError("Erreur serveur . Réessayez plus tard.");
+                }
             }
         });
     }
