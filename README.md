@@ -37,4 +37,4 @@ Application Android de consultation de posts.
 - Pagination pour charger plus de posts
 - Recherche de posts par titre
 - Partager un post
-- Notifications push
+- Notifications push (FCM)
