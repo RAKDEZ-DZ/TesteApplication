@@ -39,12 +39,10 @@ public class DetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        // Initialiser les vues
         TextView tvTitle = view.findViewById(R.id.tvDetailTitle);
         TextView tvBody = view.findViewById(R.id.tvDetailBody);
         TextView tvPostId = view.findViewById(R.id.tvPostId);
 
-        // Afficher les données du post
         if (post != null) {
             tvTitle.setText(post.getTitle());
             tvBody.setText(post.getBody());
